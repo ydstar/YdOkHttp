@@ -14,4 +14,6 @@ public interface DownloadCallback {
     void onFailure(IOException e);
 
     void onSucceed(File file);
+
+    void progress(int progress);
 }

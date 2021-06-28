@@ -21,7 +21,7 @@ public class DownLoadTask {
     //CPU核心数,参考来自AsyncTask源码
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     //线程池中的线程总数量
-    private static final int THREAD_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
+    public static final int THREAD_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
 
     //线程池
     private ExecutorService executorService;
@@ -98,6 +98,11 @@ public class DownLoadTask {
                             mCallback.onSucceed(file);
                         }
                     }
+                }
+
+                @Override
+                public void progress(int progress) {
+
                 }
             });
 

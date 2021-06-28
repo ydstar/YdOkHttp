@@ -36,4 +36,14 @@ public class FileManager {
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileName);
         return file;
     }
+
+    /**
+     * 删除文件
+     * @param url
+     */
+    public void deleteFile(String url) {
+        String fileName = Utils.md5Url(url);
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileName);
+        file.delete();
+    }
 }

@@ -12,5 +12,14 @@
         android:layout_marginTop="80dp"
         android:text="点击开始-多线程下载" />
 
+    <TextView
+        android:id="@+id/tv_text"
+        android:text="0"
+        android:textSize="50sp"
+        android:layout_marginTop="80dp"
+        android:textColor="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

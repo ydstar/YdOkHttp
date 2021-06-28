@@ -1,12 +1,17 @@
 package com.okhttp.download.download;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.okhttp.download.download.DownLoadTask.THREAD_SIZE;
 
 /**
  * Author: 信仰年轻
@@ -34,6 +39,9 @@ public class DownLoadDispatcher {
     //下载停止队列
     private final Deque<DownLoadTask> stopTasks = new ArrayDeque<>();
 
+    //专门开了个线程池来更新进度条
+    private static ExecutorService sLocalProgressPool = Executors.newFixedThreadPool(THREAD_SIZE);
+
 
     /**
      * 开始下载
@@ -52,7 +60,7 @@ public class DownLoadDispatcher {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //获取文件的总大小
-                long contentLength = response.body().contentLength();
+                final long contentLength = response.body().contentLength();
                 if (contentLength <= -1) {
                     // 没有获取到文件的大小，
                     // 1. 跟后台商量
@@ -66,9 +74,35 @@ public class DownLoadDispatcher {
 
                 //添加到运行队列
                 runningTasks.add(downLoadTask);
+
+
+                //进度更新
+                sLocalProgressPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            try {
+                                Thread.sleep(500);
+                                File file = FileManager.manager().getFile(url);
+                                long fileSize = file.length();
+                                int progress = (int) (fileSize * 100.0 / contentLength);
+                                if (progress >= 100) {
+                                    callback.progress(progress);
+                                    return;
+                                }
+                                callback.progress(progress);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
             }
         });
     }
+
+
 
 
 }
