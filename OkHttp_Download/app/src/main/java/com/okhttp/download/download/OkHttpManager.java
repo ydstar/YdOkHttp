@@ -1,9 +1,12 @@
 package com.okhttp.download.download;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -18,7 +21,12 @@ public class OkHttpManager {
     private OkHttpClient okHttpClient;
 
     private OkHttpManager() {
-        okHttpClient = new OkHttpClient();
+        okHttpClient = new OkHttpClient
+                .Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60,TimeUnit.SECONDS)
+                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+                .build();
     }
 
     public static OkHttpManager getInstance() {
@@ -28,7 +36,6 @@ public class OkHttpManager {
     private static class SingleHolder {
         private static final OkHttpManager INSTANCE = new OkHttpManager();
     }
-
 
     /**
      * 发起异步请求

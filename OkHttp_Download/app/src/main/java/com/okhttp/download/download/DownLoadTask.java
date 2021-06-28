@@ -43,7 +43,7 @@ public class DownLoadTask {
      */
     public synchronized ExecutorService executorService() {
         if (executorService == null) {
-            executorService = new ThreadPoolExecutor(0, THREAD_SIZE, 30, TimeUnit.SECONDS,
+            executorService = new ThreadPoolExecutor(0, THREAD_SIZE, 60, TimeUnit.SECONDS,
                     new SynchronousQueue<Runnable>(), new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
