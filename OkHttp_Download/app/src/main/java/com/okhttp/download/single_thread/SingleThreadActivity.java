@@ -67,12 +67,7 @@ public class SingleThreadActivity extends AppCompatActivity {
                 }
                 inputStream.close();
                 outputStream.close();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppInfoUtils.install(file.getAbsolutePath());
-                    }
-                });
+                AppInfoUtils.install(file.getAbsolutePath());
             }
         });
     }

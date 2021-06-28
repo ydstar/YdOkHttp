@@ -38,13 +38,7 @@ public class MoreThreadActivity extends AppCompatActivity {
             }
             @Override
             public void onSucceed(final File file) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppInfoUtils.install(file.getAbsolutePath());
-                    }
-                });
-
+                AppInfoUtils.install(file.getAbsolutePath());
             }
         });
     }
