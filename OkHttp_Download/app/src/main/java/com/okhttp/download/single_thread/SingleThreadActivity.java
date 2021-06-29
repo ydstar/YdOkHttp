@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.okhttp.download.R;
-import com.okhttp.download.download.AppInfoUtils;
+import com.okhttp.download.download.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,7 +67,7 @@ public class SingleThreadActivity extends AppCompatActivity {
                 }
                 inputStream.close();
                 outputStream.close();
-                AppInfoUtils.install(file.getAbsolutePath());
+                Utils.install(file.getAbsolutePath());
             }
         });
     }

@@ -67,42 +67,48 @@ public class DownLoadDispatcher {
                     // 2. 只能采用单线程去下载
                     return;
                 }
-
                 DownLoadTask downLoadTask = new DownLoadTask(url, contentLength, callback);
                 //开启线程池去下载
                 downLoadTask.init();
-
                 //添加到运行队列
                 runningTasks.add(downLoadTask);
 
-
-                //进度更新
-                sLocalProgressPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            try {
-                                Thread.sleep(500);
-                                File file = FileManager.manager().getFile(url);
-                                long fileSize = file.length();
-                                int progress = (int) (fileSize * 100.0 / contentLength);
-                                if (progress >= 100) {
-                                    callback.progress(progress);
-                                    return;
-                                }
-                                callback.progress(progress);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-
+                //更新进度
+                updateProgress(url, callback, contentLength);
             }
         });
     }
 
 
+    /**
+     * 进度更新
+     *
+     * @param url
+     * @param callback
+     * @param contentLength
+     */
+    private void updateProgress(final String url, final DownloadCallback callback, final long contentLength) {
+        sLocalProgressPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(300);
+                        File file = FileManager.manager().getFile(url);
+                        long fileSize = file.length();
+                        int progress = (int) (fileSize * 100.0 / contentLength);
+                        if (progress >= 100) {
+                            callback.progress(progress);
+                            return;
+                        }
+                        callback.progress(progress);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 
 
 }

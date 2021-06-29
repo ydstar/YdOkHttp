@@ -7,10 +7,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.okhttp.download.R;
-import com.okhttp.download.download.AppInfoUtils;
 import com.okhttp.download.download.DownLoadFacade;
 import com.okhttp.download.download.DownloadCallback;
 import com.okhttp.download.download.FileManager;
+import com.okhttp.download.download.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class MoreThreadActivity extends AppCompatActivity {
             }
             @Override
             public void onSucceed(final File file) {
-                AppInfoUtils.install(file.getAbsolutePath());
+                Utils.install(file.getAbsolutePath());
             }
 
             @Override
