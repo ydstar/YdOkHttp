@@ -21,8 +21,6 @@ public class DownloadRunnable implements Runnable {
     private static final int STATUS_STOP = 2;
     private int mStatus = STATUS_DOWNLOADING;
 
-    private long mProgress = 0;
-
     private String mUrl;
     private final int mThreadId;
     private final long mStart;
@@ -49,7 +47,7 @@ public class DownloadRunnable implements Runnable {
             inputStream = response.body().byteStream();
 
             // 写数据
-            File file = FileManager.manager().getFile(mUrl);
+            File file = FileManager.getInstance().getFile(mUrl);
             accessFile = new RandomAccessFile(file, "rwd");
             // 从这里开始
             accessFile.seek(mStart);
@@ -60,8 +58,6 @@ public class DownloadRunnable implements Runnable {
                 if (mStatus == STATUS_STOP) {
                     break;
                 }
-                // 保存进度，做断点 , 100kb
-                mProgress += len;
                 accessFile.write(buffer, 0, len);
             }
             //数据写完,回调出去

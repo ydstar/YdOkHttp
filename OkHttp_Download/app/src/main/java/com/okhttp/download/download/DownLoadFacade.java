@@ -26,7 +26,7 @@ public class DownLoadFacade {
      * @param context
      */
     public void init(Context context){
-        FileManager.manager().init(context.getApplicationContext());
+        FileManager.getInstance().init(context.getApplicationContext());
     }
 
     /**

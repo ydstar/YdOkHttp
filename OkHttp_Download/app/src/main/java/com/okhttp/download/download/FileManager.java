@@ -13,12 +13,14 @@ import java.io.File;
  */
 public class FileManager {
 
-
     private Context mContext;
-    private static final FileManager sManager = new FileManager();
 
-    public static FileManager manager() {
-        return sManager;
+    public static FileManager getInstance() {
+        return SingleHolder.INSTANCE;
+    }
+
+    private static class SingleHolder {
+        private static final FileManager INSTANCE = new FileManager();
     }
 
     public void init(Context context) {
@@ -27,9 +29,6 @@ public class FileManager {
 
     /**
      * 通过网络的路径获取一个本地文件路径
-     *
-     * @param url
-     * @return
      */
     public File getFile(String url) {
         String fileName = Utils.md5Url(url);
@@ -39,7 +38,6 @@ public class FileManager {
 
     /**
      * 删除文件
-     * @param url
      */
     public void deleteFile(String url) {
         String fileName = Utils.md5Url(url);

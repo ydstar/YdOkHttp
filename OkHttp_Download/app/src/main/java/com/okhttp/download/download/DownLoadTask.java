@@ -96,6 +96,7 @@ public class DownLoadTask {
                         mSucceedNumber += 1;
                         if (mSucceedNumber == THREAD_SIZE) {
                             mCallback.onSucceed(file);
+                            DownLoadDispatcher.getInstance().recyclerTask(DownLoadTask.this);
                         }
                     }
                 }

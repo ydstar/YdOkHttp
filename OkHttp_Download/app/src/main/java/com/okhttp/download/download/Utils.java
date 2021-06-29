@@ -57,9 +57,9 @@ public class Utils {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         // 由于没有在Activity环境下启动Activity,设置下面的标签
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(Build.VERSION.SDK_INT>=24) { //判读版本是否在7.0以上
-            AppUtils.installApp(path,"com.yadong.install");
-        }else{
+        if (Build.VERSION.SDK_INT >= 24) { //判读版本是否在7.0以上
+            AppUtils.installApp(path, "com.yadong.install");
+        } else {
             intent.setDataAndType(Uri.parse("file://" + path),
                     "application/vnd.android.package-archive");
             MyApplication.getInstance().startActivity(intent);

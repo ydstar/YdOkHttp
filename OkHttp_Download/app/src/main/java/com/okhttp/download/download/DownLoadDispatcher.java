@@ -21,16 +21,6 @@ import static com.okhttp.download.download.DownLoadTask.THREAD_SIZE;
  */
 public class DownLoadDispatcher {
 
-    private DownLoadDispatcher() {
-    }
-
-    public static DownLoadDispatcher getInstance() {
-        return SingleHolder.INSTANCE;
-    }
-
-    private static class SingleHolder {
-        private static final DownLoadDispatcher INSTANCE = new DownLoadDispatcher();
-    }
 
     //下载准备队列
     private final Deque<DownLoadTask> readyTasks = new ArrayDeque<>();
@@ -42,12 +32,19 @@ public class DownLoadDispatcher {
     //专门开了个线程池来更新进度条
     private static ExecutorService sLocalProgressPool = Executors.newFixedThreadPool(THREAD_SIZE);
 
+    private DownLoadDispatcher() {
+    }
+
+    public static DownLoadDispatcher getInstance() {
+        return SingleHolder.INSTANCE;
+    }
+
+    private static class SingleHolder {
+        private static final DownLoadDispatcher INSTANCE = new DownLoadDispatcher();
+    }
 
     /**
      * 开始下载
-     *
-     * @param url
-     * @param callback
      */
     public void startDownLoad(final String url, final DownloadCallback callback) {
         Call call = OkHttpManager.getInstance().asyncCall(url);
@@ -72,20 +69,14 @@ public class DownLoadDispatcher {
                 downLoadTask.init();
                 //添加到运行队列
                 runningTasks.add(downLoadTask);
-
                 //更新进度
                 updateProgress(url, callback, contentLength);
             }
         });
     }
 
-
     /**
      * 进度更新
-     *
-     * @param url
-     * @param callback
-     * @param contentLength
      */
     private void updateProgress(final String url, final DownloadCallback callback, final long contentLength) {
         sLocalProgressPool.execute(new Runnable() {
@@ -94,7 +85,7 @@ public class DownLoadDispatcher {
                 while (true) {
                     try {
                         Thread.sleep(300);
-                        File file = FileManager.manager().getFile(url);
+                        File file = FileManager.getInstance().getFile(url);
                         long fileSize = file.length();
                         int progress = (int) (fileSize * 100.0 / contentLength);
                         if (progress >= 100) {
@@ -108,6 +99,14 @@ public class DownLoadDispatcher {
                 }
             }
         });
+    }
+
+    /**
+     * 移除正在运行的task
+     */
+    public void recyclerTask(DownLoadTask downloadTask) {
+        runningTasks.remove(downloadTask);
+        // 参考 OkHttp 的 Dispatcher 的源码,如果还有需要下载的开始下一个的下载
     }
 
 
